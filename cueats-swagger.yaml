@@ -1,0 +1,81 @@
+swagger: '2.0'
+info:
+  title: CU Eat
+  description: 'A food delivery application for Columbia University students. They can order food from their favorite dining halls and have it delivered to their dorm rooms within minutes.'
+  version: 1.0.0
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /order:
+    post:
+      summary: The endpoint that will be used to place an order.
+      description: |
+        This API takes in one or more orders from the client and returns a confirmation if their order was successfully placed.
+      tags:
+        - NLU
+      operationId: sendOrder
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OrderRequest'
+      responses:
+        '200':
+          description: Order feedback (whether or not it went through)
+          schema:
+            $ref: '#/definitions/OrderResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  OrderRequest:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  OrderResponse:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  Message:
+    type: object
+    properties:
+      type:
+        type: string
+      unstructured:
+        $ref: '#/definitions/UnstructuredMessage'
+  UnstructuredMessage:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      timestamp:
+        type: string
+        format: datetime
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
