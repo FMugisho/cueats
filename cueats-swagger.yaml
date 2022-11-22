@@ -38,7 +38,53 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /search:
+    get:
+      summary: The endpoint that will be used to search for food items.
+      description: |
+        This API takes in a search query as a query parameter and returns zero or more food items that match the search query.
+      tags:
+        - NLU
+      operationId: browseMenu
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: the food to be searched
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Search results
+          schema:
+            $ref: '#/definitions/SearchResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
+  SearchResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/SearchResponseItem'
+  SearchResponseItem:
+    type: object
+    properties:
+      url:
+        type: string
+      labels:
+        type: array
+        items:
+          type: string
   OrderRequest:
     type: object
     properties:
