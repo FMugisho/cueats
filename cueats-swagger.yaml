@@ -65,6 +65,8 @@ definitions:
     properties:
       id:
         type: string
+      uid:
+        type: string
       text:
         type: string
       timestamp:
