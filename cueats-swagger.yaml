@@ -15,7 +15,7 @@ paths:
       description: |
         This API takes in one or more orders from the client and returns a confirmation if their order was successfully placed.
       tags:
-        - NLU
+        - order
       operationId: sendOrder
       produces:
         - application/json
@@ -44,7 +44,7 @@ paths:
       description: |
         This API takes in a search query as a query parameter and returns zero or more food items that match the search query.
       tags:
-        - NLU
+        - menu
       operationId: browseMenu
       parameters:
         - name: q
