@@ -23,3 +23,16 @@ def get_menu():
 
 	return data;
 
+def lambda_handler(event, context):
+	# Parse order details from event
+	# Push the order details to a simple queue
+	# Question: When the user clicks on the image of food to order, how is the data transferred to lambda
+	body = event["orderDetails"] # change orderDetails to the param that have that info
+	sqs = boto3.client('sqs')
+    sqs.send_message(
+        QueueUrl="InsertQueueURL",
+        MessageBody = json.dumps(body)
+    )
+    # Return based on the response structure expected
+	return -1;
+
