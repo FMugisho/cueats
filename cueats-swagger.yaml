@@ -1,129 +1,210 @@
-swagger: '2.0'
+---
+swagger: "2.0"
 info:
-  title: CU Eat
-  description: 'A food delivery application for Columbia University students. They can order food from their favorite dining halls and have it delivered to their dorm rooms within minutes.'
-  version: 1.0.0
+  description: "A food delivery application for Columbia University students. They\
+    \ can order food from their favorite dining halls and have it delivered to their\
+    \ dorm rooms within minutes."
+  version: "1.0.0"
+  title: "CU Eat"
+host: "2w4dq70fjc.execute-api.us-east-1.amazonaws.com"
+basePath: "/v1"
 schemes:
-  - https
-basePath: /v1
-produces:
-  - application/json
+- "https"
 paths:
   /order:
     post:
-      summary: The endpoint that will be used to place an order.
-      description: |
-        This API takes in one or more orders from the client and returns a confirmation if their order was successfully placed.
-      tags:
-        - order
-      operationId: sendOrder
+      operationId: "sendOrder"
+      consumes:
+      - "application/json"
       produces:
-        - application/json
+      - "application/json"
       parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/OrderRequest'
+      - in: "body"
+        name: "OrderRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/OrderRequest"
       responses:
-        '200':
-          description: Order feedback (whether or not it went through)
+        "200":
+          description: "200 response"
           schema:
-            $ref: '#/definitions/OrderResponse'
-        '403':
-          description: Unauthorized
+            $ref: "#/definitions/OrderResponse"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        "500":
+          description: "500 response"
           schema:
-            $ref: '#/definitions/Error'
-        '500':
-          description: Unexpected error
+            $ref: "#/definitions/Error"
+        "403":
+          description: "403 response"
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
+      x-amazon-apigateway-integration:
+        type: "mock"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+    options:
+      consumes:
+      - "application/json"
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        type: "mock"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
   /search:
     get:
-      summary: The endpoint that will be used to search for food items.
-      description: |
-        This API takes in a search query as a query parameter and returns zero or more food items that match the search query.
-      tags:
-        - menu
-      operationId: browseMenu
-      parameters:
-        - name: q
-          in: query
-          required: false
-          schema:
-            type: string
-          description: the food to be searched
+      operationId: "browseMenu"
+      consumes:
+      - "application/json"
       produces:
-        - application/json
+      - "application/json"
+      parameters:
+      - name: "q"
+        in: "query"
+        required: false
+        type: "string"
       responses:
-        '200':
-          description: Search results
+        "200":
+          description: "200 response"
           schema:
-            $ref: '#/definitions/SearchResponse'
-        '403':
-          description: Unauthorized
+            $ref: "#/definitions/SearchResponse"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        "500":
+          description: "500 response"
           schema:
-            $ref: '#/definitions/Error'
-        '500':
-          description: Unexpected error
+            $ref: "#/definitions/Error"
+        "403":
+          description: "403 response"
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
+      x-amazon-apigateway-integration:
+        type: "mock"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+    options:
+      consumes:
+      - "application/json"
+      responses:
+        "200":
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        type: "mock"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
 definitions:
-  SearchResponse:
-    type: object
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/SearchResponseItem'
-  SearchResponseItem:
-    type: object
-    properties:
-      url:
-        type: string
-      labels:
-        type: array
-        items:
-          type: string
-  OrderRequest:
-    type: object
-    properties:
-      messages:
-        type: array
-        items:
-          $ref: '#/definitions/Message'
-  OrderResponse:
-    type: object
-    properties:
-      messages:
-        type: array
-        items:
-          $ref: '#/definitions/Message'
   Message:
-    type: object
+    type: "object"
     properties:
       type:
-        type: string
+        type: "string"
       unstructured:
-        $ref: '#/definitions/UnstructuredMessage'
+        $ref: "#/definitions/UnstructuredMessage"
   UnstructuredMessage:
-    type: object
+    type: "object"
     properties:
       id:
-        type: string
+        type: "string"
       uid:
-        type: string
+        type: "string"
       text:
-        type: string
+        type: "string"
       timestamp:
-        type: string
-        format: datetime
+        type: "string"
+        format: "datetime"
+  OrderRequest:
+    type: "object"
+    properties:
+      messages:
+        type: "array"
+        items:
+          $ref: "#/definitions/Message"
+  SearchResponseItem:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+      labels:
+        type: "array"
+        items:
+          type: "string"
   Error:
-    type: object
+    type: "object"
     properties:
       code:
-        type: integer
-        format: int32
+        type: "integer"
+        format: "int32"
       message:
-        type: string
+        type: "string"
+  OrderResponse:
+    type: "object"
+    properties:
+      messages:
+        type: "array"
+        items:
+          $ref: "#/definitions/Message"
+  SearchResponse:
+    type: "object"
+    properties:
+      results:
+        type: "array"
+        items:
+          $ref: "#/definitions/SearchResponseItem"
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
 
