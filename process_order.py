@@ -2,7 +2,7 @@ import boto3
 import json
 
 def send_email(request):
-	SENDER = "cueats@gmail.com" # must be verified in AWS SES Email
+    SENDER = "cueats@gmail.com" # must be verified in AWS SES Email
     RECIPIENT = request['email'] # must be verified in AWS SES Email
 
     SUBJECT = "Order Confirmation"
@@ -31,17 +31,14 @@ def send_email(request):
             },
             Message={
                 'Body': {
-                    'Html': {
-        
+                    'Html': {    
                         'Data': BODY_HTML
                     },
                     'Text': {
-        
                         'Data': BODY_TEXT
                     },
                 },
                 'Subject': {
-
                     'Data': SUBJECT
                 },
             },
@@ -54,19 +51,16 @@ def send_email(request):
         print("Email sent! Message ID:"),
         print(response['MessageId'])
 
-
 def lambda_handler(event, context):
-	# Polls order from the queue and processes it
-	# Add the order to the queue for the delivery person (SQS2)
-	# Sends email to customer about the status of the order (Confirmation)
-	for record in event['Records']:
-		order = record['body']
-		order_info = json.loads(order)
-
-		sqs = boto3.client('sqs')
+    # Polls order from the queue and processes it
+    # Add the order to the queue for the delivery person (SQS2)
+    # Sends email to customer about the status of the order (Confirmation)
+    for record in event['Records']:
+        order = record['body']
+	order_info = json.loads(order)
+	sqs = boto3.client('sqs')
     	sqs.send_message(
-        	QueueUrl="InsertDriverSQSURL",
-        	MessageBody = json.dumps(order_info) # Check the structure of order_info
+	    QueueUrl="InsertDriverSQSURL",
+            MessageBody = json.dumps(order_info) # Check the structure of order_info
     	)
-
-    	send_email(order_info)
+    send_email(order_info)
