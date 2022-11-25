@@ -70,6 +70,3 @@ def lambda_handler(event, context):
     	)
 
     	send_email(order_info)
-
-
-
