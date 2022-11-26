@@ -23,9 +23,11 @@ window.onload = function(){
 
         apigClient.searchGet(params, body, additionalParams)
         .then(function(result) {
+            // TODO:    `FMugisho implement
             // Some result found. Do something
 
         }).catch(function(result) {
+            // TODO:    `FMugisho implement
             // Some exception occurred. Handle here
         });
     })
