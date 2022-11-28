@@ -212,11 +212,13 @@ definitions:
   UnstructuredMessage:
     type: "object"
     properties:
-      id:
+      order_name:
         type: "string"
-      uid:
+      user_email:
         type: "string"
-      text:
+      location:
+        type: "string"
+      details:
         type: "string"
       timestamp:
         type: "string"
@@ -273,4 +275,3 @@ x-amazon-apigateway-gateway-responses:
 x-amazon-apigateway-binary-media-types:
 - "image/png"
 - "image/jpg"
-
