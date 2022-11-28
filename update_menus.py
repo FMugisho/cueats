@@ -5,6 +5,7 @@ import requests
 import json
 import zlib
 import datetime
+import boto3
 from dateutil import parser as timeparser
 
 DINING_HOST = 'https://dining.columbia.edu'
@@ -13,13 +14,16 @@ MEALS_ENDPOINT = DINING_HOST + '/cu_dining/rest/meals'
 MENU_TYPES_ENDPOINT = DINING_HOST + '/sites/default/files/cu_dining/cu_dining_terms.json'
 MENUS_ENDPOINT = DINING_HOST + '/cu_dining/rest/menus/nested'
 
+LOCATIONS_TABLE = 'locations'
+LOCATION_DETAILS_TABLE = 'location_details'
+
 
 def get_json(url):
     res = requests.get(url)
     return json.loads(res.text)
 
 def get_location_key(location):
-    return zlib.crc32(location['title'].encode())
+    return str(zlib.crc32(location['title'].encode()))
 
 def generate_locations(location_endpoint):
     locations = get_json(location_endpoint)['locations']
@@ -101,8 +105,6 @@ def generate_result_menus(target_date, menus, nid_to_location, meal_types,
 def main():
     locations, nid_to_location = generate_locations(LOCATIONS_ENDPOINT)
 
-    # TODO: upload these locations to locatinons dynamo table
-
     meals = get_meals(MEALS_ENDPOINT)
     meal_types, stations = get_dining_keyword_mappings(MENU_TYPES_ENDPOINT)
     menus = get_menus(MENUS_ENDPOINT)
@@ -111,9 +113,41 @@ def main():
     location_menus = generate_result_menus(today_date, menus, nid_to_location,
                                            meal_types, stations, meals)
 
-    # TODO: upload menus dict to dynamo table
+    dynamo_client = boto3.client('dynamodb')
+
+    locations_request = []
+    for location_id in locations:
+        locations_request.append({
+            'PutRequest' : {
+                'Item' : {
+                    'location_id' : {'S' : location_id},
+                    'location_name' : {'S' : json.dumps(locations[location_id])}
+                }
+            }
+        })
+
+    location_details_request = []
+    for location_id in location_menus:
+        location_details_request.append({
+            'PutRequest' : {
+                'Item' : {
+                    'location_id' : {'S' : location_id},
+                    'location_details' : {'S' : json.dumps(location_menus[location_id])}
+                }
+            }
+        })
+    final_request = {
+        LOCATIONS_TABLE : locations_request,
+        LOCATION_DETAILS_TABLE : location_details_request
+    }
+
+    response = dynamo_client.batch_write_item(RequestItems=final_request)
 
     print(location_menus)
+    print(response)
 
 if __name__ == '__main__':
+    main()
+
+def lambda_handler(event, context):
     main()
