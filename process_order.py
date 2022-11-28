@@ -54,7 +54,6 @@ def send_email(request):
         print("Email sent! Message ID:"),
         print(response['MessageId'])
 
-
 def lambda_handler(event, context):
     # Polls order from the queue and processes it
     # Sends email to delivery person about the order
