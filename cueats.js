@@ -10,7 +10,7 @@ window.onload = function(){
         cartCount += 1;
         $("#cartcount").empty();
         $("#cartcount").append("<div class=\"p-2 bg-secondary bg-gradient text-white\">" + cartCount + "</div>");
-        $("#cartcount").append("<div class=\"p-2 bg-transparent bg-gradient\">Cart</div>");
+        $("#cartcount").append("<div class=\"d-flex p-2 bg-transparent bg-gradient\"><i style=\"font-size:24px\" class=\"fa\">&#xf07a;</i></div>");
     });
 
     $("#signin").click(function(){
