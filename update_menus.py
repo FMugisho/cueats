@@ -14,7 +14,6 @@ MEALS_ENDPOINT = DINING_HOST + '/cu_dining/rest/meals'
 MENU_TYPES_ENDPOINT = DINING_HOST + '/sites/default/files/cu_dining/cu_dining_terms.json'
 MENUS_ENDPOINT = DINING_HOST + '/cu_dining/rest/menus/nested'
 
-LOCATIONS_TABLE = 'locations'
 LOCATION_DETAILS_TABLE = 'location_details'
 
 
@@ -84,14 +83,13 @@ def generate_result_menus(target_date, menus, nid_to_location, meal_types,
     menu_details = {}
     for menu in menus:
         location_id = nid_to_location[menu['locations'][0]]
-        cur_menu_details = create_if_not_exists(menu_details, location_id, {})
         for date_range in menu['date_range_fields']:
             start = timeparser.parse(date_range['date_from'])
             end = timeparser.parse(date_range['date_to'])
-
             if start > target_date or end < target_date:
                 continue
 
+            cur_menu_details = create_if_not_exists(menu_details, location_id, {})
             cur_meal_type = meal_types[date_range['menu_type'][0]]
             cur_menu = create_if_not_exists(cur_menu_details, cur_meal_type, {})
             for station in date_range['stations']:
@@ -115,29 +113,18 @@ def main():
 
     dynamo_client = boto3.client('dynamodb')
 
-    locations_request = []
-    for location_id in locations:
-        locations_request.append({
-            'PutRequest' : {
-                'Item' : {
-                    'location_id' : {'S' : location_id},
-                    'location_name' : {'S' : json.dumps(locations[location_id])}
-                }
-            }
-        })
-
     location_details_request = []
     for location_id in location_menus:
         location_details_request.append({
             'PutRequest' : {
                 'Item' : {
                     'location_id' : {'S' : location_id},
+                    'location_name' : {'S' : locations[location_id]}
                     'location_details' : {'S' : json.dumps(location_menus[location_id])}
                 }
             }
         })
     final_request = {
-        LOCATIONS_TABLE : locations_request,
         LOCATION_DETAILS_TABLE : location_details_request
     }
 
