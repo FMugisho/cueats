@@ -9,7 +9,7 @@ const images = [
 ]
 
 function make_location_card(image_src, title_text, description_text) {
-    const card = $("<div class='col-sm card'>")
+    const card = $("<div class='col-sm card location-card'>")
     const img = $("<img>")
     img.attr('src', image_src)
     const body = $("<div class='card-body'>")
