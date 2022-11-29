@@ -14,15 +14,8 @@ paths:
   /get_menu:
     get:
       operationId: "browseMenu"
-      consumes:
-      - "application/json"
       produces:
       - "application/json"
-      parameters:
-      - name: "q"
-        in: "query"
-        required: true
-        type: "string"
       responses:
         "200":
           description: "200 response"
@@ -40,15 +33,16 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-amazon-apigateway-integration:
-        type: "mock"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:420958655029:function:get_menus/invocations"
         responses:
           default:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws"
     options:
       consumes:
       - "application/json"
@@ -63,7 +57,6 @@ paths:
             Access-Control-Allow-Headers:
               type: "string"
       x-amazon-apigateway-integration:
-        type: "mock"
         responses:
           default:
             statusCode: "200"
@@ -74,6 +67,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        type: "mock"
   /get_status:
     get:
       operationId: "browseStatus"
@@ -103,7 +97,6 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-amazon-apigateway-integration:
-        type: "mock"
         responses:
           default:
             statusCode: "200"
@@ -112,6 +105,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        type: "mock"
     options:
       consumes:
       - "application/json"
@@ -126,7 +120,6 @@ paths:
             Access-Control-Allow-Headers:
               type: "string"
       x-amazon-apigateway-integration:
-        type: "mock"
         responses:
           default:
             statusCode: "200"
@@ -137,6 +130,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        type: "mock"
   /place_order:
     post:
       operationId: "sendOrder"
@@ -167,7 +161,6 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       x-amazon-apigateway-integration:
-        type: "mock"
         responses:
           default:
             statusCode: "200"
@@ -176,6 +169,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        type: "mock"
     options:
       consumes:
       - "application/json"
@@ -190,7 +184,6 @@ paths:
             Access-Control-Allow-Headers:
               type: "string"
       x-amazon-apigateway-integration:
-        type: "mock"
         responses:
           default:
             statusCode: "200"
@@ -201,6 +194,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
+        type: "mock"
 definitions:
   Message:
     type: "object"
@@ -213,6 +207,8 @@ definitions:
     type: "object"
     properties:
       order_name:
+        type: "string"
+      order_price:
         type: "string"
       user_email:
         type: "string"
@@ -262,14 +258,14 @@ definitions:
         items:
           $ref: "#/definitions/SearchResponseItem"
 x-amazon-apigateway-gateway-responses:
-  DEFAULT_5XX:
-    responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   DEFAULT_4XX:
     responseParameters:
-      gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
       gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
       gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
 x-amazon-apigateway-binary-media-types:
