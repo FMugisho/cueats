@@ -20,6 +20,7 @@ window.onload = function(){
 
 function populateCart(){
     let totalPrice = 0;
+    let discount = 0;
     let itemCount = 0;
     for (const [key, value] of Object.entries(orders)){
         itemCount += 1;
@@ -27,6 +28,6 @@ function populateCart(){
         $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between lh-condensed\"><div><h6 class=\"my-0\">" + key + "</h6>" + "<small class=\"text-muted\">Lorem Ipsum</small></div> <span class=\"text-muted\">$" + value + "</span> </li>");
     }
     $("#cart-count").append(itemCount);
-    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between bg-light\"><div><h6 class=\"my-0\">" + "Promo code" + "</h6>" + "<small class=\"text-muted\">TBD</small></div> <span class=\"text-success\">-0</span> </li>");
+    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between bg-light\"><div><h6 class=\"my-0\">" + "Promo code" + "</h6>" + "<small class=\"text-muted\">TBD</small></div> <span class=\"text-success\">" + (totalPrice - discount) + "</span> </li>");
     $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between\"><span>Total (USD)</span> <strong> $" + totalPrice + "</strong> </li>");
 }
