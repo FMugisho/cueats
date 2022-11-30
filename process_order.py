@@ -2,8 +2,8 @@ import boto3
 import json
 
 def send_email(request):
-    SENDER = "cueats@gmail.com" # must be verified in AWS SES Email
-    RECIPIENT = "dme2136@columbia.edu" # must be verified in AWS SES Email
+    SENDER = "ColumbiaUEats@gmail.com" # must be verified in AWS SES Email
+    RECIPIENT = "debimulugeta1999@gmail.com" # must be verified in AWS SES Email
 
     SUBJECT = "Delivery Request"
     BODY_TEXT = ("A customer has requested delivery from " + request['unstructured']["dining_location"] + ". You can find the order details below:\n "

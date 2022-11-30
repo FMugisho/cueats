@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 def send_email(request):
-    SENDER = "cueats@gmail.com"  # must be verified in AWS SES Email
+    SENDER = "ColumbiaUEats@gmail.com"  # must be verified in AWS SES Email
     RECIPIENT = request['email']  # must be verified in AWS SES Email
 
     SUBJECT = "Order Confirmation"
@@ -62,7 +62,10 @@ def lambda_handler(event, context):
     """
     body = event["messages"][0]  # change orderDetails to the param that have that info
     sqs = boto3.client("sqs")
-    sqs.send_message(QueueUrl="InsertQueueURL", MessageBody=json.dumps(body))
+    sqs.send_message(
+        QueueUrl="https://sqs.us-east-1.amazonaws.com/420958655029/orderQueue", 
+        MessageBody=json.dumps(body)
+    )
     send_email(body)
     return {
         "messages": [
