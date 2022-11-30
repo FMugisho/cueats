@@ -32,7 +32,7 @@ function make_item_card(menu_item) {
     img.attr("src", menu_item.image_url)
     const card_body = $("<div class='card-body'>")
     const title = $("<h5 class='card-title'>")
-    title.html(menu_item.name)
+    title.html(menu_item.title)
     const card_description = $("<p class='card-text' style='text-align: center'>")
     card_description.html(menu_item.description)
     const add_to_cart_btn = $("<a href='#' class='btn btn-outline-primary btn-rounded cartbutton' data-mdb-ripple-color='dark'>")
@@ -85,7 +85,7 @@ $(document).ready(function () {
                                 "name" : cur_menu_item,
                                 "description" : "Delicious food cooked to perfection" // TODO
                             }
-                            $("#items-container").append(make_item_card(menu_item))
+                            $("#items-container").append(make_item_card(cur_menu_item))
                         })
                     })
                 })
