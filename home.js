@@ -1,12 +1,11 @@
-
 const apigClient = apigClientFactory.newClient()
-
-var i = 0
 const images = [
     "https://cu-eats-client-front-end.s3.amazonaws.com/static-photos/Roaree-73v2.jpg",
     "https://cu-eats-client-front-end.s3.amazonaws.com/static-photos/Campus-dining.jpg",
     "https://cu-eats-client-front-end.s3.amazonaws.com/static-photos/columbia-jj-thumb-3.jpg"
 ]
+let cartItems = {}; // global variable to store shopping cart information.
+let i = 0
 
 function make_location_card(image_src, title_text, description_text) {
     const card = $("<div class='col-sm card location-card'>")
@@ -38,8 +37,6 @@ function make_item_card(menu_item) {
     const add_to_cart_btn = $("<a href='#' class='btn btn-outline-primary btn-rounded cartbutton' data-mdb-ripple-color='dark'>")
     add_to_cart_btn.html("Add to cart")
 
-    // TODO add the right function for adding to cart
-
     card_body.append(title, $("<hr class='my-4'>"), card_description, add_to_cart_btn)
 
     card.append(img, card_body)
@@ -48,8 +45,7 @@ function make_item_card(menu_item) {
 }
 
 $(document).ready(function () {
-    console.log("home.js loaded")
-
+    console.log("home.js loaded");
     const result = apigClient.getMenuGet().then(function (result) {
         console.log(result.data)
         $.each(result.data, function (location_id, cur_location) {
@@ -85,7 +81,17 @@ $(document).ready(function () {
                                 "name" : cur_menu_item,
                                 "description" : "Delicious food cooked to perfection" // TODO
                             }
-                            $("#items-container").append(make_item_card(cur_menu_item))
+                            const card = make_item_card(cur_menu_item)
+                            $("#items-container").append(card);
+                            card.click(function(){
+                                const item = $(card).text().replace("Add to cart", "");
+                                // TODO FMugisho: Right now, any click can add item to cart items. This should be avoided. Only clicks to add to cart button should be accounted for.
+                                if (item in cartItems){
+                                    cartItems[item] = cartItems[item] + 1;
+                                } else {
+                                    cartItems[item] = 1;
+                                }
+                            })
                         })
                     })
                 })
@@ -95,9 +101,9 @@ $(document).ready(function () {
         console.log(result)
     })
 
-
-
+    $("#checkout").click(function(){
+        const queryString = Object.keys(cartItems).map(key => key + '=' + cartItems[key]).join('&');
+        window.location.href = "checkout.html" + "?" + queryString;
+    })
     console.log("results: ", result)
-
-
 })

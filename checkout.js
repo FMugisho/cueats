@@ -1,7 +1,7 @@
-const orders = {"philly cheesesteak":5, "chef mike grandma's special": 14, "ferris special pasta": 15, "chef Debi's injara": 100};
-
 window.onload = function(){
-    populateCart();
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    populateCart(params);
     window.addEventListener('load', function() {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         var forms = document.getElementsByClassName('needs-validation');
@@ -18,14 +18,13 @@ window.onload = function(){
     }, false);
 }
 
-function populateCart(){
-    let totalPrice = 0;
-    let discount = 0;
+function populateCart(items){
+    const totalPrice = 15; // assume customers will be billed by the average money value of a swipe.
+    const discount = 0; // TODO: adjust discount value if applicable.
     let itemCount = 0;
-    for (const [key, value] of Object.entries(orders)){
+    for (const [key, value] of Object.entries(items)){
         itemCount += 1;
-        totalPrice += value
-        $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between lh-condensed\"><div><h6 class=\"my-0\">" + key + "</h6>" + "<small class=\"text-muted\">Lorem Ipsum</small></div> <span class=\"text-muted\">$" + value + "</span> </li>");
+        $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between lh-condensed\"><div><h6 class=\"my-0\">" + key + "</h6>" + "<small class=\"text-muted\">Lorem Ipsum</small></div> <span class=\"text-muted\">Qty: " + value + "</span> </li>");
     }
     $("#cart-count").append(itemCount);
     $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between bg-light\"><div><h6 class=\"my-0\">" + "Promo code" + "</h6>" + "<small class=\"text-muted\">TBD</small></div> <span class=\"text-success\">" + discount + "</span> </li>");
