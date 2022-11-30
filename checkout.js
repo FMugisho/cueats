@@ -1,3 +1,102 @@
+const apigClient = apigClientFactory.newClient({apiKey: "DBRcedm5J4a8k4wxtwcEJ3vltGN7knEU8GLHOnLn"});
+
+$(document).ready(function(){
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+  console.log("the params are " + JSON.stringify(params));
+  populateCart(params);
+
+  $("#placeorder").click(function(){
+    console.log("the final place order button has been clicked ... ");
+    const formResponse = parseForm();
+    const params = {
+      "Content-Type": "application/json",
+    };
+    const body = {
+      "messages": [
+        {
+          "type": "",
+          "unstructured": {
+            "order_name": JSON.stringify(params),
+            "order_price": "15",
+            "user_email": formResponse[0],
+            "location": "CU Dining", // TODO FMugisho: Parse real location
+            "details": formResponse[1],
+            "timestamp": ""
+          }
+        }
+      ]
+    };
+    const additionalParams = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+    };
+    const result = apigClient.placeOrderPost(params, body, additionalParams).then(function(result){
+      console.log("here is the result from the post request: " + result);
+    }).catch(function (result) {
+      console.log("in the exception block!");
+      console.log(result);
+    });
+    
+    /*
+    postData(body);
+    alert("should be done processing")
+    console.log("going to leverage the apig")
+
+
+    */
+    
+  });
+})
+
+function populateCart(items){
+    const totalPrice = 15; // assume customers will be billed by the average money value of a swipe.
+    const discount = 0; // TODO: adjust discount value if applicable.
+    let itemCount = 0;
+    for (const [key, value] of Object.entries(items)){
+        itemCount += 1;
+        $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between lh-condensed\"><div><h6 class=\"my-0\">" + key + "</h6>" + "<small class=\"text-muted\">Lorem Ipsum</small></div> <span class=\"text-muted\">Qty: " + value + "</span> </li>");
+    }
+    $("#cart-count").append(itemCount);
+    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between bg-light\"><div><h6 class=\"my-0\">" + "Promo code" + "</h6>" + "<small class=\"text-muted\">TBD</small></div> <span class=\"text-success\">" + discount + "</span> </li>");
+    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between\"><span>Total (USD)</span> <strong> $" + (totalPrice - discount) + "</strong> </li>");
+}
+
+function parseForm(){
+  const details = {
+    "username": $("#username").val,
+    "firstname": $("#firstName").val,
+    "lastname": $("#lastName").val,
+    "address": $("#address").val(),
+  }
+  const emailAddr = $("#email").val();
+  // TODO FMugisho: parse other element like name, address, etc
+  return [emailAddr, JSON.stringify(details)];
+}
+
+async function postData(body){  
+  try {
+    const response = await fetch("https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/place_order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: body
+    });
+    alert("The response from postData is " + response)
+    if (!response.ok) {
+      const message = 'Error with Status Code: ' + response.status;
+      throw new Error(message);
+    }
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log('Error: ' + error);
+  }
+}
+
+/*
 window.onload = function(){
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
@@ -16,17 +115,33 @@ window.onload = function(){
           }, false);
         });
     }, false);
-}
-
-function populateCart(items){
-    const totalPrice = 15; // assume customers will be billed by the average money value of a swipe.
-    const discount = 0; // TODO: adjust discount value if applicable.
-    let itemCount = 0;
-    for (const [key, value] of Object.entries(items)){
-        itemCount += 1;
-        $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between lh-condensed\"><div><h6 class=\"my-0\">" + key + "</h6>" + "<small class=\"text-muted\">Lorem Ipsum</small></div> <span class=\"text-muted\">Qty: " + value + "</span> </li>");
-    }
-    $("#cart-count").append(itemCount);
-    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between bg-light\"><div><h6 class=\"my-0\">" + "Promo code" + "</h6>" + "<small class=\"text-muted\">TBD</small></div> <span class=\"text-success\">" + discount + "</span> </li>");
-    $("#cart-items").append("<li class=\"list-group-item d-flex justify-content-between\"><span>Total (USD)</span> <strong> $" + (totalPrice - discount) + "</strong> </li>");
-}
+    $("#placeorder").click(function(){
+      console.log("the final place order button has been clicked ... ");
+      const formResponse = parseForm();
+      const params = {};
+      const body = {
+        "messages": [
+          {
+            "type": "",
+            "unstructured": {
+              "order_name": JSON.stringify(params),
+              "order_price": "15",
+              "user_email": formResponse[0],
+              "location": "CU Dining", // TODO FMugisho: Parse real location
+              "details": formResponse[1],
+              "timestamp": ""
+            }
+          }
+        ]
+      };
+      const additionalParams = {};
+      const result = apigClt.placeOrderPost(params, body, additionalParams).then(function(result){
+        console.log("here is the result from the post request: " + result);
+      }).catch(function (result) {
+        console.log("in the exception block!");
+        console.log(result);
+      });
+      
+    });
+  }
+  */

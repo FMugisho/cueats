@@ -158,12 +158,12 @@ apigClientFactory.newClient = function (config) {
     apigClient.placeOrderPost = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, ['body'], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['body', 'Content-Type'], ['body']);
         
         var placeOrderPostRequest = {
             verb: 'post'.toUpperCase(),
             path: pathComponent + uritemplate('/place_order').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
-            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            headers: apiGateway.core.utils.parseParametersToObject(params, ['Content-Type']),
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
         };
