@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 def send_email(request):
-    SENDER = "cueats@gmail.com"  # must be verified in AWS SES Email
+    SENDER = "ColumbiaUEats@gmail.com"  # must be verified in AWS SES Email
     RECIPIENT = request['email']  # must be verified in AWS SES Email
 
     SUBJECT = "Order Confirmation"
