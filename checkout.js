@@ -2,8 +2,8 @@ const apigClient = apigClientFactory.newClient({apiKey: "DBRcedm5J4a8k4wxtwcEJ3v
 
 $(document).ready(function(){
   const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-  console.log("the params are " + JSON.stringify(params));
+  const orderDetails = Object.fromEntries(urlSearchParams.entries());
+  console.log("the order details params are " + JSON.stringify(orderDetails));
   populateCart(params);
 
   $("#placeorder").click(function(){
@@ -17,7 +17,7 @@ $(document).ready(function(){
         {
           "type": "",
           "unstructured": {
-            "order_name": JSON.stringify(params),
+            "order_name": JSON.stringify(orderDetails),
             "order_price": "15",
             "user_email": formResponse[0],
             "location": "CU Dining", // TODO FMugisho: Parse real location
@@ -38,14 +38,6 @@ $(document).ready(function(){
       console.log("in the exception block!");
       console.log(result);
     });
-    
-    /*
-    postData(body);
-    alert("should be done processing")
-    console.log("going to leverage the apig")
-
-
-    */
     
   });
 })
@@ -74,74 +66,3 @@ function parseForm(){
   // TODO FMugisho: parse other element like name, address, etc
   return [emailAddr, JSON.stringify(details)];
 }
-
-async function postData(body){  
-  try {
-    const response = await fetch("https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/place_order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: body
-    });
-    alert("The response from postData is " + response)
-    if (!response.ok) {
-      const message = 'Error with Status Code: ' + response.status;
-      throw new Error(message);
-    }
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.log('Error: ' + error);
-  }
-}
-
-/*
-window.onload = function(){
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    populateCart(params);
-    window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-          form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-          }, false);
-        });
-    }, false);
-    $("#placeorder").click(function(){
-      console.log("the final place order button has been clicked ... ");
-      const formResponse = parseForm();
-      const params = {};
-      const body = {
-        "messages": [
-          {
-            "type": "",
-            "unstructured": {
-              "order_name": JSON.stringify(params),
-              "order_price": "15",
-              "user_email": formResponse[0],
-              "location": "CU Dining", // TODO FMugisho: Parse real location
-              "details": formResponse[1],
-              "timestamp": ""
-            }
-          }
-        ]
-      };
-      const additionalParams = {};
-      const result = apigClt.placeOrderPost(params, body, additionalParams).then(function(result){
-        console.log("here is the result from the post request: " + result);
-      }).catch(function (result) {
-        console.log("in the exception block!");
-        console.log(result);
-      });
-      
-    });
-  }
-  */
