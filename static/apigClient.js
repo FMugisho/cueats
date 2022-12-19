@@ -83,6 +83,42 @@ apigClientFactory.newClient = function (config) {
     
     
     
+    apigClient.getDriverLocationGet = function (params, body, additionalParams) {
+        if(additionalParams === undefined) { additionalParams = {}; }
+        
+        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
+        
+        var getDriverLocationGetRequest = {
+            verb: 'get'.toUpperCase(),
+            path: pathComponent + uritemplate('/get_driver_location').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            body: body
+        };
+        
+        
+        return apiGatewayClient.makeRequest(getDriverLocationGetRequest, authType, additionalParams, config.apiKey);
+    };
+    
+    
+    apigClient.getDriverLocationOptions = function (params, body, additionalParams) {
+        if(additionalParams === undefined) { additionalParams = {}; }
+        
+        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
+        
+        var getDriverLocationOptionsRequest = {
+            verb: 'options'.toUpperCase(),
+            path: pathComponent + uritemplate('/get_driver_location').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            body: body
+        };
+        
+        
+        return apiGatewayClient.makeRequest(getDriverLocationOptionsRequest, authType, additionalParams, config.apiKey);
+    };
+    
+    
     apigClient.getMenuGet = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
@@ -188,6 +224,42 @@ apigClientFactory.newClient = function (config) {
         
         
         return apiGatewayClient.makeRequest(placeOrderOptionsRequest, authType, additionalParams, config.apiKey);
+    };
+    
+    
+    apigClient.updateDriverLocationPost = function (params, body, additionalParams) {
+        if(additionalParams === undefined) { additionalParams = {}; }
+        
+        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
+        
+        var updateDriverLocationPostRequest = {
+            verb: 'post'.toUpperCase(),
+            path: pathComponent + uritemplate('/update_driver_location').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            body: body
+        };
+        
+        
+        return apiGatewayClient.makeRequest(updateDriverLocationPostRequest, authType, additionalParams, config.apiKey);
+    };
+    
+    
+    apigClient.updateDriverLocationOptions = function (params, body, additionalParams) {
+        if(additionalParams === undefined) { additionalParams = {}; }
+        
+        apiGateway.core.utils.assertParametersDefined(params, [], ['body']);
+        
+        var updateDriverLocationOptionsRequest = {
+            verb: 'options'.toUpperCase(),
+            path: pathComponent + uritemplate('/update_driver_location').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
+            body: body
+        };
+        
+        
+        return apiGatewayClient.makeRequest(updateDriverLocationOptionsRequest, authType, additionalParams, config.apiKey);
     };
     
 

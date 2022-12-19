@@ -1,3 +1,4 @@
+var watchId;
 $(document).ready(function() {
     console.log( "ready!" );
     $("#key1").click(function() {
@@ -8,6 +9,15 @@ $(document).ready(function() {
         $("#key1").addClass("big dot"); // marking the current status
         $("#val1").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
         $("#val1-2").val("Order received");
+
+        // send position because we have received
+        watchId = navigator.geolocation.watchPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+          
+            // Send the updated latitude and longitude to customers using API gateway endpoint
+        });
+          
     });
     $("#key2").click(function() {
         // do something
@@ -47,6 +57,8 @@ $(document).ready(function() {
         $("#key5").addClass("big dot"); // marking the current status
         $("#val5").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
         $("#val5-2").val("Delivered");
+        navigator.geolocation.clearWatch(watchId); // stop tracking driver's position
+        console.log("we're done tracking your position");
 
     });
 });
