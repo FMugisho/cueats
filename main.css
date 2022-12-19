@@ -3,6 +3,10 @@
     background-color: blue
 }
 
+.dot:hover{
+    transform: scale(2.5);
+}
+
 .track-line {
     height: 2px !important;
     background-color: #488978;
