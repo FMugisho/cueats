@@ -1,3 +1,6 @@
+const driverID = 1579;
+let watchId;
+ 
 $(document).ready(function() {
     console.log( "ready!" );
     $("#key1").click(function() {
@@ -8,6 +11,32 @@ $(document).ready(function() {
         $("#key1").addClass("big dot"); // marking the current status
         $("#val1").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
         $("#val1-2").val("Order received");
+
+        // send position because we have received the order
+        watchId = navigator.geolocation.watchPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+          
+            // Send the updated latitude and longitude to customers using API gateway endpoint
+            // console.log("latitute")
+            const data = { 'driver_id': driverID, 'latitude': latitude, 'longitude': longitude};
+
+            fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/update_driver_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success while sending position:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending position:', error);
+            });
+        });
+          
     });
     $("#key2").click(function() {
         // do something
@@ -47,6 +76,8 @@ $(document).ready(function() {
         $("#key5").addClass("big dot"); // marking the current status
         $("#val5").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
         $("#val5-2").val("Delivered");
+        navigator.geolocation.clearWatch(watchId); // stop tracking driver's position
+        console.log("we're done tracking your position");
 
     });
 });
