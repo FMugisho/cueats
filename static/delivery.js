@@ -1,6 +1,7 @@
 // Initialize and add the map
 var map;
-
+const driver_id = '1579';
+const customer_position = {lat: 40.771209, lng: -73.9673991};
 function haversine_distance(mk1, mk2){
     var R = 3958.8; // Radius of the Earth in miles
     var rlat1 = mk1.position.lat() * (Math.PI/180); // Convert degrees to radians
@@ -19,17 +20,24 @@ function initMap() {
     const options = {zoom: 15, scaleControl: true, center: center};
     map = new google.maps.Map(
         document.getElementById('map'), options);
-    // Locations of landmarks
-    const dakota = {lat: 40.7767644, lng: -73.9761399};
-    const frick = {lat: 40.771209, lng: -73.9673991};
-    // The markers for The Dakota and The Frick Collection
-    var mk1 = new google.maps.Marker({position: dakota, map: map});
-    var mk2 = new google.maps.Marker({position: frick, map: map});
-    // Draw a line showing the straight distance between the markers
-    var line = new google.maps.Polyline({path: [dakota, frick], map: map});
-    // Calculate and display the distance between markers
-    var distance = haversine_distance(mk1, mk2);
-    document.getElementById('msg').innerHTML = "Distance between markers: " + distance.toFixed(2) + " mi.";
+
+    fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_driver_location?driver_id=' + driver_id)
+    .then((response) => response.json())
+    .then((data) => {
+        console.log('Success getting user position:', data);
+        const driver_position = {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)};
+        // The markers for The driver's and The customer's locations
+        var mk1 = new google.maps.Marker({position: driver_position, map: map});
+        var mk2 = new google.maps.Marker({position: customer_position, map: map});
+        // Draw a line showing the straight distance between the markers
+        var line = new google.maps.Polyline({path: [driver_position, customer_position], map: map});
+        // Calculate and display the distance between markers
+        var distance = haversine_distance(mk1, mk2);
+        document.getElementById('msg').innerHTML = "Distance between markers: " + distance.toFixed(2) + " mi.";
+    })
+    .catch((error) => {
+        console.error('Error getting user position:', error);
+    });
 }
 
 $( document ).ready(function() {
