@@ -2,3 +2,9 @@
 .location-card:hover {
     background-color: blue
 }
+
+/* Set the size of the div element that contains the map */
+#map {
+    height: 400px; /* The height is 400 pixels */
+    width: 600px; /* The width is the width of the web page */
+}
