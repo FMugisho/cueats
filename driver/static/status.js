@@ -1,15 +1,17 @@
 const driverID = '1579';
+const clientName = "PrezBo";
 let watchId;
  
 $(document).ready(function() {
     console.log( "ready!" );
+    // to Foo Bar on December 18th, 2022
+    $("#clientinfo").text("to " + clientName + " on " +  new Date().toUTCString());
     $("#key1").click(function() {
         // TODO FMugisho: add class big dot to span on click
         // Order received --- do something
-        const today = new Date();
         // TODO FMugisho: add class big dot to span on click
         $("#key1").addClass("big dot"); // marking the current status
-        $("#val1").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
+        $("#val1").text(new Date().toLocaleTimeString()); // assign datetime as status text
 
         // send position because we have received the order
         watchId = navigator.geolocation.watchPosition(function(position) {
@@ -39,35 +41,31 @@ $(document).ready(function() {
     });
     $("#key2").click(function() {
         // Accepted order --- do something
-        const today = new Date();
         // TODO FMugisho: add class big dot to span on click
         $("#key2").addClass("big dot"); // marking the current status
-        $("#val2").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
+        $("#val2").text(new Date().toLocaleTimeString()); // assign datetime as status text
         $("#val2-2").val("Accepted order");
 
     }); 
     $("#key3").click(function() {
         // Order picked up from vendor --- do something
-        const today = new Date();
         // TODO FMugisho: add class big dot to span on click
         $("#key3").addClass("big dot"); // marking the current status
-        $("#val3").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
+        $("#val3").text(new Date().toLocaleTimeString()); // assign datetime as status text
 
     }); 
     $("#key4").click(function() {
         // Order out for delivery --- do something
-        const today = new Date();
         // TODO FMugisho: add class big dot to span on click
         $("#key4").addClass("big dot"); // marking the current status
-        $("#val4").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
+        $("#val4").text(new Date().toLocaleTimeString()); // assign datetime as status text
 
     });
     $("#key5").click(function() {
         // Delivered --- do something
-        const today = new Date();
         // TODO FMugisho: add class big dot to span on click
         $("#key5").addClass("big dot"); // marking the current status
-        $("#val5").text(today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() +' '+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()); // assign datetime as status text
+        $("#val5").text(new Date().toLocaleTimeString()); // assign datetime as status text
         navigator.geolocation.clearWatch(watchId); // stop tracking driver's position
         console.log("we're done tracking your position");
 
