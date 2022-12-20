@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src=https://code.jquery.com/jquery-3.3.1.min.js
+			crossorigin="anonymous"></script>
+		<script>
+			$(document).ready(function(){
+				const urlParams = new URLSearchParams(window.location.search)
+				let code = urlParams.get('code')
+				const callback_uri = "https://s3.amazonaws.com/cueats.link/authenticated.html"
+				const client_id = "46fe9dmf872i3q2r8ffikqec8j"
+				const client_secret = "1jadj1bcf8hu8cpkhmgk9a7gkv3m45r94734gqbo412342hirrlm"
+
+
+				const params = {
+				    "grant_type": "authorization_code",
+				    "client_id": client_id,
+				    "client_secret": client_secret,
+				    "code": code,
+				    "redirect_uri": callback_uri 
+				}
+
+				const prms = new URLSearchParams(params);
+
+				fetch('https://cueatsuser.auth.us-east-1.amazoncognito.com/oauth2/token', {
+				  method: 'POST',
+				  headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+				    'Authorization': 'Basic ' + btoa(client_id + ":" + client_secret)
+				  },
+				  body: prms.toString(),
+				})
+				  .then((response) => response.json())
+				  .then((data) => {
+				    console.log('Yay the request was sent:', data);
+				    document.cookie = "access_token=" + data.access_token + ";"
+				    window.location.href = "https://s3.amazonaws.com/cueats.link/home.html"
+				  })
+				  .catch((error) => {
+				    console.error('Oops something went wrong while sending request:', error);
+				  });
+				});
+		</script>
+	</head>
+	<body>
+		<div>Working on it</div>
+	</body>
+</html>

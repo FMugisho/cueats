@@ -1,5 +1,5 @@
 const apigClient = apigClientFactory.newClient({apiKey: "DBRcedm5J4a8k4wxtwcEJ3vltGN7knEU8GLHOnLn"});
-
+const access_token = Cookies.get('access_token')
 $(document).ready(function(){
   const urlSearchParams = new URLSearchParams(window.location.search);
   const orderDetails = Object.fromEntries(urlSearchParams.entries());
@@ -22,7 +22,8 @@ $(document).ready(function(){
             "user_email": formResponse[0],
             "location": "CU Dining", // TODO FMugisho: Parse real location
             "details": formResponse[1],
-            "timestamp": ""
+            "timestamp": "",
+            "access_token": access_token
           }
         }
       ]
