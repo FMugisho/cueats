@@ -36,7 +36,7 @@ $(document).ready(function(){
     const result = apigClient.placeOrderPost(params, body, additionalParams).then(function(result){
         console.log("here is the result from the post request: ", result);
 
-        window.location.href = "/delivery.html?order_id" + result.order_id
+        window.location.href = "delivery.html?order_id=" + result.order_id
 
     }).catch(function (result) {
       console.log("in the exception block!");
