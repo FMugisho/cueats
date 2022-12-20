@@ -1,7 +1,11 @@
-const driver_id = '1579';
 const customer_position = {lat: 40.771209, lng: -73.9673991}; // will use Geolocation.getCurrentPosition()
 const intervalMax = 20;
 let intervalStart = 0;
+
+// The order id should have been passed when we got directed here
+const urlParams = new URLSearchParams(window.location.search)
+const order_id = urlParams.get('order_id')
+console.log("Order id is : ", order_id)
 
 /*
 * Computes the distance between two coordinates
@@ -33,29 +37,44 @@ function initMap() {
 
     const intervalID = setInterval(() => {
         intervalStart++;
-        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_driver_location?driver_id=' + driver_id)
-        .then((response) => response.json())
-        .then((data) => {
-            console.log('Success getting user position:', data);
-            const driver_position = {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)};
-            // Calculate and display the distance between markers
-            const distance = haversine_distance(driver_position, customer_position);
-            // display distance to driver
-            document.getElementById('msg').innerHTML = "Your driver is: " + distance.toFixed(2) + " miles away.";
-            directionsService
-            .route({
-              origin: driver_position.lat.toString() + "," + driver_position.lng.toString(),
-              destination: customer_position.lat.toString() + "," + customer_position.lng.toString(),
-              travelMode: google.maps.TravelMode.WALKING,
+        // First, try getting the driver_id for our order
+        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_order_driver?order_id=' + order_id)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("order has been picked up ", data)
+                $("#order-status").html("Your order has been picked up by " + data.driver_first_name + " " + data.driver_last_name)
+
+                const driver_id = data.driver_id
+
+                // Now try to get the driver's position
+                fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_driver_location?driver_id=' + driver_id)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('Success getting user position:', data);
+                        const driver_position = {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)};
+                        // Calculate and display the distance between markers
+                        const distance = haversine_distance(driver_position, customer_position);
+                        // display distance to driver
+                        document.getElementById('msg').innerHTML = "Your driver is: " + distance.toFixed(2) + " miles away.";
+                        directionsService
+                            .route({
+                                origin: driver_position.lat.toString() + "," + driver_position.lng.toString(),
+                                destination: customer_position.lat.toString() + "," + customer_position.lng.toString(),
+                                travelMode: google.maps.TravelMode.WALKING,
+                            })
+                            .then((response) => {
+                                directionsRenderer.setDirections(response);
+                            })
+                            .catch((e) => window.alert("Directions request failed due to " + e));
+                    })
+                    .catch((error) => {
+                        console.error('Error getting user position:', error);
+                    });
             })
-            .then((response) => {
-              directionsRenderer.setDirections(response);
+            .catch((error) => {
+                console.log("No driver assigned for order yet")
             })
-            .catch((e) => window.alert("Directions request failed due to " + e));
-        })
-        .catch((error) => {
-            console.error('Error getting user position:', error);
-        });
+
     }, 5000); // update driver's position every 5 second.
     if (intervalStart == intervalMax) {
         clearInterval(intervalID); // Stop the interval
@@ -65,5 +84,6 @@ function initMap() {
 window.initMap = initMap;
 
 $( document ).ready(function() {
-    console.log( "ready!" );      
+    console.log( "ready!" );
+    $("#order-status").html("The order has not been picked up yet")
 });
