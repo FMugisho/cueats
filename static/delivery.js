@@ -41,6 +41,9 @@ function initMap() {
         fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_order_driver?order_id=' + order_id)
             .then((response) => response.json())
             .then((data) => {
+                if (!data.driver_first_name) {
+                    return
+                }
                 console.log("order has been picked up ", data)
                 $("#order-status").html("Your order has been picked up by " + data.driver_first_name + " " + data.driver_last_name)
 
