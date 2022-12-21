@@ -2,6 +2,8 @@ const customer_position = {lat: 40.771209, lng: -73.9673991}; // will use Geoloc
 const intervalMax = 20;
 let intervalStart = 0;
 
+let moved_on = false
+
 // The order id should have been passed when we got directed here
 const urlParams = new URLSearchParams(window.location.search)
 const order_id = urlParams.get('order_id')
@@ -42,8 +44,11 @@ function initMap() {
             .then((response) => response.json())
             .then((data) => {
                 if (!data.driver_first_name) {
+                    $("#order-status").html("Your order is delivered")
+
                     return
                 }
+                moved_on = true
                 console.log("order has been picked up ", data)
                 $("#order-status").html("Your order is " + data.delivery_status + " by " + data.driver_first_name + " " + data.driver_last_name)
 
