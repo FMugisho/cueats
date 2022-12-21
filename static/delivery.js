@@ -44,8 +44,9 @@ function initMap() {
             .then((response) => response.json())
             .then((data) => {
                 if (!data.driver_first_name) {
-                    $("#order-status").html("Your order is delivered")
-
+                    if (moved_on) {
+                        $("#order-status").html("Your order is delivered")
+                    }
                     return
                 }
                 moved_on = true
