@@ -4,6 +4,11 @@ let watchId;
  
 $(document).ready(function() {
     console.log( "ready!" );
+    // The order id should have been passed when we got directed here
+    const urlParams = new URLSearchParams(window.location.search)
+    const driverID = urlParams.get('driver_id');
+    const orderID = urlParams.get('order_id');
+    console.log("Driver id is : ", driverID);
     // to Foo Bar on December 18th, 2022
     $("#clientinfo").text("to " + clientName + " on " +  new Date().toLocaleDateString());
     $("#key1").click(function() {
@@ -20,6 +25,7 @@ $(document).ready(function() {
           
             // Send the updated latitude and longitude to customers using API gateway endpoint
             // console.log("latitute")
+            // TODO: Update driver's id
             const data = { 'driver_id': driverID, 'latitude': latitude, 'longitude': longitude};
 
             fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/update_driver_location', {
@@ -53,6 +59,21 @@ $(document).ready(function() {
         $("#key3").addClass("big dot"); // marking the current status
         $("#val3").text(new Date().toLocaleTimeString()); // assign datetime as status text
 
+        const postBody = {order_id: orderID};
+        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/pick_up_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postBody),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success updating status for pickup order:', data);
+        })
+        .catch((error) => {
+            console.error('Error updating status for pickup order:', error);
+        });
     }); 
     $("#key4").click(function() {
         // Order out for delivery --- do something
@@ -68,6 +89,22 @@ $(document).ready(function() {
         $("#val5").text(new Date().toLocaleTimeString()); // assign datetime as status text
         navigator.geolocation.clearWatch(watchId); // stop tracking driver's position
         console.log("we're done tracking your position");
+        const postBody = {order_id: orderID};
+        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/pick_up_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postBody),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success updating status for finish order:', data);
+            document.location.href = "../list_order.html";  // we're done and can go back to see other orders
+        })
+        .catch((error) => {
+            console.error('Error updating status for finish order:', error);
+        });
 
     });
 });
