@@ -68,7 +68,7 @@ function initMap() {
                             .then((response) => {
                                 directionsRenderer.setDirections(response);
                             })
-                            .catch((e) => window.alert("Directions request failed due to " + e));
+                            .catch((e) => console.log("Directions request failed due to " + e));
                     })
                     .catch((error) => {
                         console.error('Error getting user position:', error);

@@ -1,4 +1,4 @@
-const driverID = '1579';
+// const driverID = '1579';
 const clientName = "PrezBo";
 let watchId;
  
@@ -8,9 +8,10 @@ $(document).ready(function() {
     const urlParams = new URLSearchParams(window.location.search)
     const driverID = urlParams.get('driver_id');
     const orderID = urlParams.get('order_id');
+    const orderDetails = urlParams.get('order_details');
     console.log("Driver id is : ", driverID);
     // to Foo Bar on December 18th, 2022
-    $("#clientinfo").text("to " + clientName + " on " +  new Date().toLocaleDateString());
+    $("#clientinfo").text(orderDetails + " on " +  new Date().toLocaleDateString());
     $("#key1").click(function() {
         // TODO FMugisho: add class big dot to span on click
         // Order received --- do something
@@ -90,7 +91,7 @@ $(document).ready(function() {
         navigator.geolocation.clearWatch(watchId); // stop tracking driver's position
         console.log("we're done tracking your position");
         const postBody = {order_id: orderID};
-        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/pick_up_order', {
+        fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/finish_order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ $(document).ready(function() {
         .then((response) => response.json())
         .then((data) => {
             console.log('Success updating status for finish order:', data);
-            document.location.href = "../list_order.html";  // we're done and can go back to see other orders
+            document.location.href = "list_order.html";  // we're done and can go back to see other orders
         })
         .catch((error) => {
             console.error('Error updating status for finish order:', error);

@@ -1,11 +1,16 @@
 let redirectOrderID = "";
-
+let driverID = "";
+let orderDetails = "";
 $(document).ready(function() {
     console.log("Ready!");
     // The order id should have been passed when we got directed here
     const urlParams = new URLSearchParams(window.location.search);
-    const driverID = urlParams.get('driver_id');
-    console.log("Driver id is : ", driverID);  
+    driverID = urlParams.get('driver_id');
+    if (!driverID){
+        driverID = "fbm2116";
+    }
+    console.log("Driver id is : ", driverID);
+
     fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_pending_orders')
     .then((response) => response.json())
     .then((data) => {
@@ -26,7 +31,18 @@ function display(orders){
     $("#order_table").append( "<thead><tr><th scope=\"col\">#</th><th scope=\"col\">Order ID</th><th scope=\"col\">First name</th><th scope=\"col\">Last Name</th><th scope=\"col\">Order name</th><th scope=\"col\">Pickup address</th><th scope=\"col\">Delivery address</th><th scope=\"col\">email</th><th scope=\"col\">Phone</th><th scope=\"col\">Your Decision</th>");
     for (let order of orders){
         count += 1;
+        
+        let orderNames = "";
+        
+        for (const [key, value] of Object.entries(JSON.parse(order.order_name))) {
+            orderNames += value + " " + key + ",";
+        }
+        orderNames = orderNames.slice(0, -1);
+        
+
         redirectOrderID = order.order_id;
+        orderDetails = "You will be delivering "+orderNames + " to " + order.first_name + " " + order.last_name + " who is located at " + order.delivery_address;
+
         console.log("redirectOrderID is " + redirectOrderID);
         
         const currButton = "<button onclick=\"redirect()\"; type=\"button\" class=\"btn btn-outline-success\">Accept</button>"
@@ -39,6 +55,7 @@ function display(orders){
 }
 
 function redirect(){
+    // You will be delivering {} to {} located at {}.
     const postBody = {order_id: redirectOrderID, driver_id: driverID};
     fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/accept_order', {
         method: 'POST',
@@ -50,7 +67,7 @@ function redirect(){
     .then((response) => response.json())
     .then((data) => {
         console.log('Success updating status:', data);
-        document.location.href = "status.html?order_id="+redirectOrderID+"&driver_id="+driverID;
+        document.location.href = "status.html?order_id="+redirectOrderID+"&driver_id="+driverID+ "&order_details=" + orderDetails;
     })
     .catch((error) => {
         console.error('Error updating status:', error);
