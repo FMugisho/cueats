@@ -1,10 +1,11 @@
-const orders = [{order_id: "11132", first_name: "foo", last_name: "bar", order_name: "john", pickup_address: "john jay", delivery_address: "556 W 114th", email: "foo@columbia.edu", phone: "123"},
-{order_id: "32121", first_name: "adfa", last_name: "fafdfa", order_name: "john", pickup_address: "john jay", delivery_address: "556 W 114th", email: "adfa@columbia.edu", phone: "123"}];
-const driverID = "km3533";
 let redirectOrderID = "";
 
 $(document).ready(function() {
-    console.log("Ready!");    
+    console.log("Ready!");
+    // The order id should have been passed when we got directed here
+    const urlParams = new URLSearchParams(window.location.search);
+    const driverID = urlParams.get('driver_id');
+    console.log("Driver id is : ", driverID);  
     fetch('https://2w4dq70fjc.execute-api.us-east-1.amazonaws.com/v1/get_pending_orders')
     .then((response) => response.json())
     .then((data) => {
