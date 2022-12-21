@@ -45,7 +45,7 @@ function initMap() {
                     return
                 }
                 console.log("order has been picked up ", data)
-                $("#order-status").html("Your order has been picked up by " + data.driver_first_name + " " + data.driver_last_name)
+                $("#order-status").html("Your order has been" + data.delivery_status + " by " + data.driver_first_name + " " + data.driver_last_name)
 
                 const driver_id = data.driver_id
 
